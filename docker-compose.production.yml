@@ -1,3 +1,5 @@
+version: '3'
+
 volumes:
   pg_data:
   static:
@@ -8,25 +10,28 @@ services:
     image: postgres:13
     env_file: .env
     volumes:
-      - pg_data:/var/lib/postgres/data
+      - pg_data:/var/lib/postgresql/data
   
   backend:
-    image: karkyshka/kittygram_backend
+    image: karkyshka/taski_backend
     env_file: .env
     volumes:
-      - static:/static/
+      - static:/backend_static
+      # - static:/static/
       - media:/app/media/
+  
   frontend:
     env_file: .env
-    image: karkyshka/kittygram_frontend
+    image: karkyshka/taski_frontend
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
+  
   gateway:
-    image: karkyshka/kittygram_gateway
+    image: karkyshka/taski_gateway
     env_file: .env
     ports:
-      - 8080:80
+      - 9000:80
     volumes:
       - static:/static
       - media:/app/media/
